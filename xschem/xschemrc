@@ -1,46 +1,35 @@
-#### xschemrc system configuration file
+# xschemrc configuration file
 
-#### values may be overridden by user's ~/.xschem/xschemrc configuration file
-#### or by project-local ./xschemrc
+set XSCHEM_SKYDIR $env(HOME)/.xschem/xschem_library/xschem_sky130
 
 ###########################################################################
-#### XSCHEM INSTALLATION DIRECTORY: XSCHEM_SHAREDIR
+## xschem installation directory XSCHEM_SHAREDIR
 ###########################################################################
-#### Normally there is no reason to set this variable if using standard
-#### installation. Location of files is set at compile time but may be overridden
-#### with following line:
+
+# normally there is no reason to set this variable if using standard
+# installation. Location of files is set at compile time but may be overridden
+# with following line:
+#
 # set XSCHEM_SHAREDIR $env(HOME)/share/xschem
 
 ###########################################################################
-#### XSCHEM SYSTEM-WIDE DESIGN LIBRARY PATHS: XSCHEM_LIBRARY_PATH
+## xschem system-wide design library paths XSCHEM_LIBRARY_PATH
 ###########################################################################
-#### If unset xschem starts with XSCHEM_LIBRARY_PATH set to the default, typically:
-# /home/schippes/.xschem/xschem_library
-# /home/schippes/share/xschem/xschem_library/devices
-# /home/schippes/share/doc/xschem/examples
-# /home/schippes/share/doc/xschem/ngspice
-# /home/schippes/share/doc/xschem/logic
-# /home/schippes/share/doc/xschem/xschem_simulator
-# /home/schippes/share/doc/xschem/binto7seg
-# /home/schippes/share/doc/xschem/pcb
-# /home/schippes/share/doc/xschem/rom8k
 
-#### Flush any previous definition
+#### get library paths in a filesystem-independent way
+
 set XSCHEM_LIBRARY_PATH {}
-#### include devices/*.sym
-append XSCHEM_LIBRARY_PATH ${XSCHEM_SHAREDIR}/xschem_library
-#### include skywater libraries. Here i use [pwd]. This works if i start xschem from here.
+append XSCHEM_LIBRARY_PATH :${XSCHEM_SHAREDIR}/xschem_library
+append XSCHEM_LIBRARY_PATH :${XSCHEM_SKYDIR}
 append XSCHEM_LIBRARY_PATH :$env(PWD)
-append XSCHEM_LIBRARY_PATH :/usr/share/pdk/sky130A/libs.tech/xschem
-#### add ~/.xschem/xschem_library (USER_CONF_DIR is normally ~/.xschem)
-append XSCHEM_LIBRARY_PATH :$USER_CONF_DIR/xschem_library 
+append XSCHEM_LIBRARY_PATH :$env(PWD)/../amsat_txrx_ic/design
 
 ###########################################################################
-#### SET CUSTOM COLORS FOR XSCHEM LIBRARIES MATCHING CERTAIN PATTERNS
+## set custom colors for xschem libraries matching certain patterns
+## each line contains a dircolor(pattern) followed by a color
+## color can be an ordinary name (grey, brown, blue) or a hex code {#77aaff}
+## hex code must be enclosed in braces
 ###########################################################################
-#### each line contains a dircolor(pattern) followed by a color
-#### color can be an ordinary name (grey, brown, blue) or a hex code {#77aaff}
-#### hex code must be enclosed in braces
 array unset dircolor
 set dircolor(sky130_fd_pr$) blue
 set dircolor(sky130_tests$) blue
@@ -48,105 +37,79 @@ set dircolor(xschem_sky130$) blue
 set dircolor(xschem_library$) red
 set dircolor(devices$) red
 
-###########################################################################
-#### WINDOW TO OPEN ON STARTUP: XSCHEM_START_WINDOW
-###########################################################################
-#### Start without a design if no filename given on command line:
-#### To avoid absolute paths, use a path that is relative to one of the
-#### XSCHEM_LIBRARY_PATH directories. Default: empty
-set XSCHEM_START_WINDOW {sky130_tests/top.sch}
 
 ###########################################################################
-#### DIRECTORY WHERE SIMULATIONS, NETLIST AND SIMULATOR OUTPUTS ARE PLACED
+## Window to open on startup XSCHEM_START_WINDOW
 ###########################################################################
-#### If unset $USER_CONF_DIR/simulations is assumed (normally ~/.xschem/simulations) 
+
+# Start with a design if no filename given:
+#
+# sset XSCHEM_START_WINDOW {sky130_tests/top.sch}
+
+# Start with a design
+# To avoid absolute paths, use a path that is relative to one of the
+# XSCHEM_LIBRARY_PATH directories.
+#
+set XSCHEM_START_WINDOW {user_analog_project_wrapper.sch}
+
+
+###########################################################################
+## Directory where simulations, netlist and simulator outputs are placed
+###########################################################################
+# If unset $USER_CONF_DIR/simulations is assumed (normally ~/.xschem/simulations) 
+#
 # set netlist_dir $env(HOME)/.xschem/simulations
-set netlist_dir .
+
 
 ###########################################################################
-#### CHANGE DEFAULT [] WITH SOME OTHER CHARACTERS FOR BUSSED SIGNALS 
-#### IN SPICE NETLISTS (EXAMPLE: DATA[7] --> DATA<7>) 
+## change default [] with some other characters for bussed signals 
+## in spice netlists (example: DATA[7] --> DATA<7>) 
 ###########################################################################
-#### default: empty (use xschem default, [ ])
-# set bus_replacement_char {<>}
-#### for XSPICE: replace square brackets as the are used for XSPICE vector nodes.
+
+set bus_replacement_char {<>}
+
+## for XSPICE
 # set bus_replacement_char {__} 
 
+
 ###########################################################################
-#### SOME DEFAULT BEHAVIOR
+## some default behavior
 ###########################################################################
-#### Allowed values:  spice, verilog, vhdl, tedax, default: spice
-# set netlist_type spice
 
-#### Some netlisting options (these are the defaults)
-# set hspice_netlist 1
-# set verilog_2001 1
+set netlist_type spice ;# allowed : spice, verilog, vhdl, tedax
+set hspice_netlist 1
+set verilog_2001 1
+# set line_width 2
+set change_lw 1
+set color_ps 1
+set initial_geometry {900x600}
+set unzoom_nodrift 0
 
-#### to use a fixed line with set change_lw to 0 and set some value to line_width
-#### these are the defaults
-# set line_width 0
-# set change_lw 1
+## if set to 1 allow to place multiple components with same name.
+## Warning: this is normally not allowed in any simulation netlist.
+set disable_unique_names 0
 
-#### allow color postscript and svg exports. Default: 1, enable color
-# set color_ps 1
-
-#### initial size of xschem window you can specify also position with (wxh+x+y)
-#### this is the default:
-# set initial_geometry {900x600}
-
-#### if set to 0, when zooming out allow the viewport do drift toward the mouse position,
-#### allowing to move away by zooming / unzooming with mouse wheel
-#### default setting: 0
-# set unzoom_nodrift 0
-
-#### if set to 1 allow to place multiple components with same name.
-#### Warning: this is normally not allowed in any simulation netlist.
-#### default: 0, do not allow place multiple elements with same name (refdes)
-# set disable_unique_names 0
-
-#### if set to 1 continue drawing lines / wires after click
-#### default: 0
+## if set to 1 continue drawing lines / wires after click
 # set persistent_command 1
 
-#### if set to 1 automatically join/trim wires while editing
-#### this may slow down on rally big designs. Can be disabled via menu 
-#### default: 0
-# set autotrim_wires 0
 
-#### set widget scaling (mainly for font display), this is useful on 4K displays
-#### default: unset (tk uses its default) > 1.0 ==> bigger 
+## set widget scaling (mainly for font display) 
 # set tk_scaling 1.7
 
-#### disable some symbol layers. Default: none, all layers are visible.
+## disable some symbol layers
 # set enable_layer(5) 0 ;# example to disable pin red boxes
 
-#### enable to scale grid point size as done with lines at close zoom, default: 0
-# set big_grid_points 0
+###########################################################################
+## custom grid / snap value settings
+###########################################################################
+
+# set grid 100
+# set snap 50
 
 ###########################################################################
-#### EXPORT FORMAT TRANSLATORS, PNG AND PDF
+## Custom colors  may be defined here
 ###########################################################################
-#### command to translate xpm to png; (assumes command takes source 
-#### and dest file as arguments, example: gm convert plot.xpm plot.png)
-#### default: {gm convert}
-# set to_png {gm convert}
 
-#### command to translate ps to pdf; (assumes command takes source
-#### and dest file as arguments, example: ps2pdf plot.ps plot.pdf)
-#### default: ps2pdf
-# set to_pdf ps2pdf
-
-###########################################################################
-#### CUSTOM GRID / SNAP VALUE SETTINGS
-###########################################################################
-#### Warning: changing these values will likely break compatibility
-#### with existing symbol libraries. Defaults: grid 20, snap 10.
-# set grid 20
-# set snap 10
-
-###########################################################################
-#### CUSTOM COLORS  MAY BE DEFINED HERE
-###########################################################################
 #  set cadlayers 22
 #  set light_colors {
 #   "#ffffff" "#0044ee" "#aaaaaa" "#222222" "#229900"
@@ -163,22 +126,22 @@ set netlist_dir .
 #   "#ef6158" "#fdb200" }
 
 ###########################################################################
-#### CAIRO STUFF
+## CAIRO STUFF
 ###########################################################################
+
 #### Scale all fonts by this number
 # set cairo_font_scale 1.0
 
 #### default for following two is 0.85 (xscale) and 0.88 (yscale) to 
 #### match cairo font spacing
 # set nocairo_font_xscale 1.0
-#### set nocairo_font_yscale 1.0
+# set nocairo_font_yscale 1.0
 
 #### Scale line spacing by this number
 # set cairo_font_line_spacing 1.0
 
 #### Specify a font
-# set cairo_font_name {Sans-Serif}
-# set svg_font_name {Sans-Serif}
+# set cairo_font_name {Arial}
 
 #### Lift up text by some zoom-corrected pixels for
 #### better compatibility wrt no cairo version.
@@ -187,8 +150,9 @@ set netlist_dir .
 # set nocairo_vert_correct 0
 
 ###########################################################################
-#### KEYBINDINGS
+## KEYBINDINGS
 ###########################################################################
+
 #### General format for specifying a replacement for a keybind
 #### Replace Ctrl-d with Escape (so you wont kill the program)
 # set replace_key(Control-d) Escape
@@ -197,77 +161,46 @@ set netlist_dir .
 # set replace_key(Shift-W) w
 # set replace_key(w) Shift-W
 
-###########################################################################
-#### TERMINAL
-###########################################################################
-#### default for linux: xterm
-# set terminal {xterm -geometry 100x35 -fn 9x15 -bg black -fg white -cr white -ms white }
-#### lxterminal is not OK since it will not inherit env vars: 
-#### In order to reduce memory usage and increase the performance, all instances
-#### of the lxterminal are sharing a single process. LXTerminal is part of LXDE
+set terminal {xterm -geometry 100x35 -fn 9x15 -bg black -fg white -cr white -ms white }
+## lxterminal is not OK since it will not inherit env vars: 
+## In order to reduce memory usage and increase the performance, all instances
+## of the terminal are sharing a single process. LXTerminal is part of LXDE
 
-###########################################################################
-#### EDITOR
-###########################################################################
 #### editor must not detach from launching shell (-f mandatory for gvim)
-#### default for linux: gvim -f
-# set editor {gvim -f -geometry 90x28}
 # set editor { xterm -geometry 100x40 -e nano }
 # set editor { xterm -geometry 100x40 -e pico }
+# set editor {gvim -f -geometry 90x28}
+set editor {gedit}
 
-#### For Windows
-# set editor {notepad.exe}
+#### show info window (ERC rules errors warnings etc) 
+# set show_infowindow 1
 
-###########################################################################
-#### SHOW ERC INFO WINDOW (erc errors, warnings etc)
-###########################################################################
-#### default: 0 (can be enabled by menu)
-# set show_infowindow 0
+#### command to translate xpm to png (assumes command takes source 
+#### and dest file as arguments, example: gm convert plot.xpm plot.png)
+set to_png {gm convert}
 
-###########################################################################
-#### CONFIGURE COMPUTER FARM JOB REDIRECTORS FOR SIMULATIONS
-###########################################################################
+#### computer farm redirector
 #### RTDA NC
 # set computerfarm {nc run -Il}
 #### LSF BSUB
 # set computerfarm {bsub -Is}
 
-###########################################################################
-#### TCP CONNECTION WITH GAW
-###########################################################################
+#### set xschem listening port
+set xschem_listen_port 2021
+
 #### set gaw address for socket connection: {host port}
-#### default: set to localhost, port 2020
-# set gaw_tcp_address {localhost 2020}
+set gaw_tcp_address {localhost 2020}
 
-###########################################################################
-#### XSCHEM LISTEN TO TCP PORT
-###########################################################################
-#### set xschem listening port; default: not enabled
-# set xschem_listen_port 2021
+#### utile (stefan's spice stimuli editor)
+set utile_gui_path ${XSCHEM_SHAREDIR}/utile/utile3
+set utile_cmd_path ${XSCHEM_SHAREDIR}/utile/utile
 
-###########################################################################
-#### UTILE SPICE STIMULI DESCRIPTION LANGUAGE AND TRANSLATOR
-###########################################################################
-#### default paths are set as shown here: 
-# set utile_gui_path ${XSCHEM_SHAREDIR}/utile/utile3
-# set utile_cmd_path ${XSCHEM_SHAREDIR}/utile/utile
-
-###########################################################################
-#### TCL FILES TO LOAD AT STARTUP
-###########################################################################
 #### list of tcl files to preload.
-# lappend tcl_files ${XSCHEM_SHAREDIR}/change_index.tcl
+# lappend tcl_files /home/schippes/x/Stefan_decoder/anddec.tcl
 lappend tcl_files ${XSCHEM_SHAREDIR}/ngspice_backannotate.tcl
-lappend tcl_files /usr/share/pdk/sky130A/libs.tech/xschem/scripts/sky130_models.tcl
-###########################################################################
-#### XSCHEM TOOLBAR
-###########################################################################
-#### default: not enabled.
-# set toolbar_visible 1
-# set toolbar_horiz   1
+lappend tcl_files ${XSCHEM_SKYDIR}/scripts/sky130_models.tcl
+#### toolbar
+set toolbar_visible 0
 
-###########################################################################
-#### SKYWATER PDK SPECIFIC VARIABLES
-###########################################################################
-set SKYWATER_MODELS ~/skywater-pdk/libraries/sky130_fd_pr_ngspice/latest
-set SKYWATER_STDCELLS ~/skywater-pdk/libraries/sky130_fd_sc_hd/latest
+set SKYWATER_MODELS $env(HOME)/skywater/skywater-pdk/libraries/sky130_fd_pr_ngspice/latest
+set SKYWATER_STDCELLS $env(HOME)/skywater/skywater-pdk/libraries/sky130_fd_sc_hs/latest
