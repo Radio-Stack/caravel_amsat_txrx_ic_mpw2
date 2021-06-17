@@ -15,7 +15,7 @@ fi
 cd "$1"
 
 # create a magic tcl command file
-echo "gds read ../../gds/user_analog_project_wrapper
+echo "gds read ../../../gds/user_analog_project_wrapper
 load $1
 flatten drc_cell
 load drc_cell" > magic_commands.tcl
