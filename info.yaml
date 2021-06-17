@@ -1,13 +1,13 @@
 ---
 project:
-  description: "An analog project for Google sponsored Open MPW shuttles for SKY130."
+  description: "Amateur Radio Satellite Transceiver Protoype II - DAC, LO and mixer"
   foundry: "SkyWater"
-  git_url: "https://github.com/efabless/caravel_analog_user.git"
-  organization: "Efabless"
-  organization_url: "http://efabless.com"
-  owner: "Tim Edwards"
+  git_url: "https://github.com/yrrapt/caravel_amsat_txrx_ic_mpw2.git"
+  organization: "N/A"
+  organization_url: "https://github.com/yrrapt/amsat_txrx_ic"
+  owner: "Thomas Parry"
   process: "SKY130"
-  project_name: "Caravel Analog User"
+  project_name: "Amsat_TXRX_IC"
   project_id: "00000000"
   tags:
     - "Open MPW"
