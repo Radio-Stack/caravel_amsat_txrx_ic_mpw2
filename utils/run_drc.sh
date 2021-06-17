@@ -7,7 +7,8 @@ if [ $# -eq 0 ]; then
 fi
 
 # go into cell specific run folder
-cd ../temp
+mkdir -p run_dir
+cd run_dir
 if [ ! -d "$1" ]; then
     mkdir -p "$1";
 fi
