@@ -3,4 +3,4 @@
 	url = https://github.com/efabless/caravel-lite
 [submodule "amsat_txrx_ic"]
 	path = amsat_txrx_ic
-	url = git@github.com:yrrapt/amsat_txrx_ic.git
+	url = https://github.com/yrrapt/amsat_txrx_ic.git
