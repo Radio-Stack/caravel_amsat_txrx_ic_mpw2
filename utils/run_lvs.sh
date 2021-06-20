@@ -44,8 +44,9 @@ echo " "
 run_dir=$PWD
 cd $PROJECT_ROOT/xschem
 #cd $PROJECT_ROOT/amsat_txrx_ic/design
-xschem -n -q -o "$run_dir" --tcl "set top_subckt 1; set bus_replacement_char {[]}" "$PROJECT_ROOT/amsat_txrx_ic/design/$1/$1.sch"
-#xschem -n -q -o "$run_dir" --tcl "set top_subckt 1; set bus_replacement_char {[]}" "$1/$1.sch"
+
+#xschem -n -q -o "$run_dir" --tcl "set top_subckt 1; set bus_replacement_char {[]}" "$PROJECT_ROOT/amsat_txrx_ic/design/$1/$1.sch"
+xschem -n -q -o "$run_dir" --tcl "set top_subckt 1; set bus_replacement_char {[]}" "$1/$1.sch"
 cd $run_dir
 
 # include the digital cell definitions
