@@ -14,5 +14,6 @@ The combination of the above items forms a digital input, 8 GHz RF output transm
 Note that there is no filtering included at this point, therefore this cannot be seen as a complete transmitter. 
 It is an experimental evaulation of the building blocks.
 
+![docs/block_diagram.svg](docs/layout.png)
 
 This is a shuttle prototype run of the larger project which can be found here: [github.com/yrrapt/amsat_txrx_ic](https://github.com/yrrapt/amsat_txrx_ic)
